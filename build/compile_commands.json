@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/mtm/practice_project/build",
+  "command": "C:\\mingw-w64\\x86_64-8.1.0-win32-seh-rt_v6-rev0\\mingw64\\bin\\g++.exe    -g   -o CMakeFiles\\project_mayham.dir\\main_test_terminal.cpp.obj -c C:\\mtm\\practice_project\\main_test_terminal.cpp",
+  "file": "C:/mtm/practice_project/main_test_terminal.cpp"
+}
+]
