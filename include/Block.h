@@ -4,7 +4,8 @@
 #include <map>
 #include <string>
 #include <memory>
-
+#include <exception>
+#include <utility>
 //template <class T>
 typedef std::string Vehicle;
 
@@ -27,6 +28,8 @@ namespace MtmParkingLot
         Block(std::size_t max_size) : max_size(max_size) {}
         ParkingResult park(Vehicle& vehicle, int spot); //const vehicle?
         ParkingResult exit(Vehicle& vehicle);
+
+        const Vehicle& operator[](int spot);
 
     private:
         void insert(Vehicle& vehicle, int spot);

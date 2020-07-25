@@ -43,3 +43,14 @@ MtmParkingLot::ParkingResult MtmParkingLot::Block::exit(Vehicle& vehicle)
 
     erase(vehicle);
 }
+
+const Vehicle& MtmParkingLot::Block::operator[](int spot)
+{
+    std::map<int, Vehicle>::iterator data = spots.find(spot);
+    if(data == spots.end())
+    {
+        throw std::out_of_range("Bad index...");
+    }
+    
+    return data->second;
+}
