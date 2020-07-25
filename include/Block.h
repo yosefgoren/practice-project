@@ -1,19 +1,46 @@
-#include <vector>
-#include <initializer_list>
-#include <algorithm>
+#ifndef BLOCK_H
+#define BLOCK_H
+
+#include <map>
 #include <string>
+#include <memory>
+#include <exception>
+#include <utility>
+//template <class T>
+typedef std::string Vehicle;
 
-class Block : public std::vector<std::string>
+
+namespace MtmParkingLot
 {
-public:
-    Block(int size) : std::vector<std::string>(size) {}
-    
-    std::string& operator[](std::size_t pos) override;
-    const std::string& operator[](std::size_t pos) const override;
+    enum ParkingResult 
+    {
+        SUCCESS,
+        NO_EMPTY_SPOT,
+        VEHICLE_NOT_FOUND,
+        VEHICLE_ALREADY_PARKED,
+        SPOT_TAKEN
+    };
 
-    std::string& at(std::size_t pos) override;
-    const std::string& at(std::size_t pos) const override;
+    class Block 
+    //class Block<Vehicle> : public std::map<int, const Vehicle>
+    {
+    public:
+        Block(std::size_t max_size) : max_size(max_size) {}
+        ParkingResult park(Vehicle& vehicle, int spot); //const vehicle?
+        ParkingResult exit(Vehicle& vehicle);
 
-    
-};
+        const Vehicle& operator[](int spot);
 
+    private:
+        void insert(Vehicle& vehicle, int spot);
+        void erase(Vehicle& vehicle);
+        std::size_t size = 0;
+        std::size_t max_size;
+        std::map<int, Vehicle> spots;
+        std::map<Vehicle, int> vehicles;
+
+    };
+
+}
+
+#endif
