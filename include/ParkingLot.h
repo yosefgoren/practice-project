@@ -5,6 +5,7 @@
 #include "Time.h"
 #include "ParkingSpot.h"
 #include "Block.h"
+#include "Vehicle_Types_Include/vehicle.h"
 
 namespace MtmParkingLot {
 
@@ -24,9 +25,6 @@ namespace MtmParkingLot {
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
 
     private:
-        Block bike;
-        Block car;
-        Block handicapped;
     };
 
 }
