@@ -3,7 +3,7 @@
 using namespace ParkingLotUtils;
 using namespace MtmParkingLot;
 
-Vehicle::Vehicle(int first_hour, int regular_hour, ParkingLotUtils::Time entry_time, LicensePlate plate) : 
+Vehicle::Vehicle(int first_hour, int regular_hour, const ParkingLotUtils::Time& entry_time, const LicensePlate& plate) : 
     first_hour(first_hour), regular_hour(regular_hour), entry_time(entry_time), plate(plate) {}
 
 Time Vehicle::getEntryTime() const

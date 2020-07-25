@@ -16,7 +16,7 @@ namespace MtmParkingLot
         bool operator<(const Vehicle& vehicle) const;
     
     protected:
-        Vehicle( int first_hour, int regular_hour, ParkingLotUtils::Time entry_time, LicensePlate plate);
+        Vehicle(int first_hour, int regular_hour, const ParkingLotUtils::Time& entry_time, const LicensePlate& plate);
 
     private:
         static const unsigned int FINE_COST = 250;
