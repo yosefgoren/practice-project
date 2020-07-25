@@ -3,14 +3,12 @@
 using namespace ParkingLotUtils;
 using namespace MtmParkingLot;
 
+Vehicle::Vehicle(ParkingLotUtils::Time entry_time, LicensePlate plate) : 
+    entry_time(entry_time), plate(plate) {}
+
 Time Vehicle::getEntryTime() const
 {
     return entry_time;
-}
-
-unsigned int Vehicle::bill() const
-{
-    return current_bill;
 }
 
 LicensePlate Vehicle::licensePlate() const
@@ -22,7 +20,7 @@ bool Vehicle::checkAndGiveFine(const Time& current_time)
 {
     if((current_time-entry_time).toHours() > HOURS_IN_DAY)
     {
-        current_bill += FINE_COST;
+        got_fine = true;
         return true;
     }
 

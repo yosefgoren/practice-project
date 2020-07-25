@@ -3,11 +3,12 @@
 void MtmParkingLot::Block::insert(Vehicle& vehicle, int spot)
 {
     spots.insert({spot, vehicle});
-    vehicles.insert(vehicle, spot); //need operator<()
+    vehicles.insert({vehicle, spot}); //need operator<()
+    size++;
 }
 void MtmParkingLot::Block::erase(Vehicle& vehicle)
 {
-    int spot = vehicles.find(vehicle);
+    int spot = vehicles.find(vehicle)->second;
     spots.erase(spot);
     vehicles.erase(vehicle);
     size--;
