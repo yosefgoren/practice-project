@@ -32,7 +32,7 @@ MtmParkingLot::ParkingResult MtmParkingLot::Block::park(Vehicle& vehicle, int sp
     }
 
     insert(vehicle, spot);
-
+    return SUCCESS;
 }
 
 MtmParkingLot::ParkingResult MtmParkingLot::Block::exit(Vehicle& vehicle)
@@ -43,6 +43,7 @@ MtmParkingLot::ParkingResult MtmParkingLot::Block::exit(Vehicle& vehicle)
     }
 
     erase(vehicle);
+    return SUCCESS;
 }
 
 const Vehicle& MtmParkingLot::Block::operator[](int spot)

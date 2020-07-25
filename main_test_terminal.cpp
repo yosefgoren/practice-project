@@ -4,23 +4,35 @@
 using std::cout;
 using std::endl;
 
+bool block_test_1();
+
 int main()
 {
+    if(block_test_1())
+    {
+        cout << "OK" << endl;
+    }
+    else
+    {
+        cout << "NO" << endl;
+    }
     return 0;
 }
 
 bool block_test_1()
 {
     MtmParkingLot::Block block(5);
-    block.park(std::string("hi"), 2);
-    block.park(std::string("hi"), 3);
+    std::string hi("hi");
+    std::string l("l");
+    block.park(hi, 2);
+    block.park(hi, 3);
 
-    block.park(std::string("l"), 2);
-    block.exit(std::string("l"));
-    block.park(std::string("l"), 3);
+    block.park(l, 2);
+    block.exit(l);
+    block.park(l, 3);
 
     cout << block[2] << "\n" << block[3] << endl;
-    block.exit(std::string("l"));
+    block.exit(l);
 
     cout << block[2] << "\n";
     try
