@@ -1,7 +1,7 @@
-#include "ParkingLotTypes.h"
-#include "Time.h"
-#include "ParkingLotPrinter.h"
-#include "ParkingLot.h"
+#include "../include/ParkingLotTypes.h"
+#include "../include/Time.h"
+#include "../include/ParkingLotPrinter.h"
+#include "../include/ParkingLot.h"
 
 #include <iostream>
 #include <fstream>

@@ -8,7 +8,7 @@ namespace MtmParkingLot
     class Car : public Vehicle
     {
     public:
-        Car(const ParkingLotUtils::Time& entry_time, const LicensePlate& plate);
+        Car(const ParkingLotUtils::Time& entry_time, const ParkingLotUtils::LicensePlate& plate);
     private:
         static const int FIRST_HOUR_COST = 20;
         static const int REGULAR_HOUR_COST = 10;
