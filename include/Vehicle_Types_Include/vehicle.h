@@ -14,6 +14,12 @@ namespace MtmParkingLot
         ParkingLotUtils::LicensePlate licensePlate() const;
         bool checkAndGiveFine(const ParkingLotUtils::Time& current_time);
         bool operator<(const Vehicle& vehicle) const;
+        
+        //debug tools:
+        bool gotFine()
+        {
+            return got_fine;
+        }
     
     protected:
         Vehicle(int first_hour, int regular_hour, const ParkingLotUtils::Time& entry_time, const ParkingLotUtils::LicensePlate& plate);

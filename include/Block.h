@@ -27,14 +27,15 @@ namespace MtmParkingLot
     {
     public:
         Block(std::size_t max_size) : max_size(max_size) {}
-        ParkingResult park(Vehicle& vehicle, int spot); //const vehicle?
-        ParkingResult exit(Vehicle& vehicle);
+        ParkingResult park(const Vehicle& vehicle, int spot); //const vehicle?
+        ParkingResult exit(const Vehicle& vehicle);
 
-        const Vehicle& operator[](int spot);
+        const Vehicle& operator[](int spot) const;
+        Vehicle& operator[](int spot);
 
     private:
-        void insert(Vehicle& vehicle, int spot);
-        void erase(Vehicle& vehicle);
+        void insert(const Vehicle& vehicle, int spot);
+        void erase(const Vehicle& vehicle);
         std::size_t size = 0;
         std::size_t max_size;
         std::map<int, Vehicle> spots;
@@ -43,7 +44,7 @@ namespace MtmParkingLot
     };
 
     template <class Vehicle>
-    void Block<Vehicle>::insert(Vehicle& vehicle, int spot)
+    void Block<Vehicle>::insert(const Vehicle& vehicle, int spot)
     {
         spots.insert({spot, vehicle});
         vehicles.insert({vehicle, spot}); //need operator<()
@@ -51,7 +52,7 @@ namespace MtmParkingLot
     }
 
     template <class Vehicle>
-    void Block<Vehicle>::erase(Vehicle& vehicle)
+    void Block<Vehicle>::erase(const Vehicle& vehicle)
     {
         int spot = vehicles.find(vehicle)->second;
         spots.erase(spot);
@@ -61,7 +62,7 @@ namespace MtmParkingLot
     }
 
     template <class Vehicle>
-    ParkingResult Block<Vehicle>::park(Vehicle& vehicle, int spot)
+    ParkingResult Block<Vehicle>::park(const Vehicle& vehicle, int spot)
     {
         if(size == max_size)
         {
@@ -83,7 +84,7 @@ namespace MtmParkingLot
     }
 
     template <class Vehicle>
-    ParkingResult Block<Vehicle>::exit(Vehicle& vehicle)
+    ParkingResult Block<Vehicle>::exit(const Vehicle& vehicle)
     {
         if(vehicles.find(vehicle) == vehicles.end())
         {
@@ -95,12 +96,33 @@ namespace MtmParkingLot
     }
 
     template <class Vehicle>
-    const Vehicle& MtmParkingLot::Block<Vehicle>::operator[](int spot)
+    const Vehicle& MtmParkingLot::Block<Vehicle>::operator[](int spot) const
     {
+        if (spot == int(max_size))
+        {
+            throw std::out_of_range("Index out of range...");
+        }
         typename std::map<int, Vehicle>::iterator data = spots.find(spot);
         if(data == spots.end())
         {
-            throw std::out_of_range("Bad index...");
+            throw std::logic_error("Empty spot...");
+        }
+        
+        return data->second;
+    }
+
+        template <class Vehicle>
+    Vehicle& MtmParkingLot::Block<Vehicle>::operator[](int spot)
+    {
+        if (spot == int(max_size))
+        {
+            throw std::out_of_range("Index out of range...");
+        }
+
+        typename std::map<int, Vehicle>::iterator data = spots.find(spot);
+        if(data == spots.end())
+        {
+            throw std::logic_error("Empty spot...");
         }
         
         return data->second;
