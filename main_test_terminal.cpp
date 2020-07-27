@@ -83,7 +83,7 @@ bool test_1()
     }
     catch (std::logic_error &e)
     {
-        cout << e.what();
+        cout << e.what() << endl;
     }
 
     cout << "trying to park @ #2 an already-parked car @ #3 ... ";
@@ -93,7 +93,7 @@ bool test_1()
     }
     else
     {
-        cout << "Car already parked @ #2." << endl;
+        cout << "Car already parked @ #3." << endl;
     }
 
     cout << "spot #2: ";
@@ -103,17 +103,17 @@ bool test_1()
     }
     catch (std::logic_error &e)
     {
-        cout << e.what();
+        cout << e.what() << endl;
     }
     cout << "spot #3: " << car_block[3].licensePlate() << endl;
 
-    if (car_block[2].licensePlate() != std::string("hi"))
+    if (car_block[3].licensePlate() != std::string("hi"))
     {
         return false;
     }
     else 
     {
-        cout << "License plate of car @ #2: " << car_block[2].licensePlate() << endl;
+        cout << "License plate of car @ #3 is \"hi\": " << car_block[3].licensePlate() << endl;
     }
     return true;
 }
@@ -130,10 +130,10 @@ void run_test(std::function<bool()> test, std::string test_name)
 {
     if (!test())
     {
-        std::cout << test_name << " FAILED.\n====================" << std::endl;
+        std::cout << test_name << " FAILED." << std::endl;
         return;
     }
-    std::cout << test_name << " SUCCEEDED.\n====================" << std::endl;
+    std::cout << test_name << " SUCCEEDED." << std::endl;
 }
 
 int main()
@@ -142,9 +142,11 @@ int main()
     //std::function<bool()> tests[NUMBER_OF_TESTS]= {test_1,test_2,test_3,test_4,test_5,test_6};
     for (int i = 0; i < int(tests.size()); ++i)
     {
-            cout << "Running test #" << i << "..." << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+        cout << "Running test #" << i << "..." << endl;
         run_test(tests[i], "Test " + std::to_string(i));
     }
+    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 
     return 0;
 }
