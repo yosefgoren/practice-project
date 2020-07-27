@@ -1,24 +1,36 @@
 #include "../include/ParkingLot.h"
 
-// using namespace MtmParkingLot;
+using namespace MtmParkingLot;
+using namespace ParkingLotUtils;
 
-// ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) :
-//     bike(parkingBlockSizes[0]),
-//     car(parkingBlockSizes[1]),
-//     handicapped(parkingBlockSizes[2])
-// {}
+ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) :
+    bike_block(parkingBlockSizes[0]),
+    handicapped_block(parkingBlockSizes[1]),
+    car_block(parkingBlockSizes[2])
+{}
 
-// //default d'tor works ?
-// // ParkingLot::~ParkingLot()
-// // {
-// //     bike.~Block();
-// //     car.~Block();
-// //     handicapped.~Block();
-// // }
+MtmParkingLot::ParkingResult ParkingLot::enterParking(ParkingLotUtils::VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime)
+{
+    switch (vehicleType)
+    {
+    case MOTORBIKE:
+    break;
 
-// ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime)
-// {
+    case HANDICAPPED:
+        handicapped_block.park(Handicapped(entranceTime, licensePlate));
+    break;
+
+    case CAR:
+        car_block.park(Car(entranceTime, licensePlate));
+        break;
+    }
+
+    return SUCCESS;
+}
+
+MtmParkingLot::ParkingResult exitParking(LicensePlate licensePlate, Time exitTime)
+{
     
-// }
+}
 
 

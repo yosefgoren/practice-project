@@ -6,6 +6,9 @@
 #include "ParkingSpot.h"
 #include "Block.h"
 #include "Vehicle_Types_Include/vehicle.h"
+#include "Vehicle_Types_Include/motorbike.h"
+#include "Vehicle_Types_Include/handicapped.h"
+#include "Vehicle_Types_Include/car.h"
 
 namespace MtmParkingLot {
 
@@ -17,14 +20,17 @@ namespace MtmParkingLot {
     public:
 
         ParkingLot(unsigned int parkingBlockSizes[]);
-        ~ParkingLot();
+        ~ParkingLot() = default;
         ParkingResult enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime);
-        ParkingResult exitParking(LicensePlate licensePlate, Time exitTime);
+        ParkingResult exitParking(LicensePlate licensePlate, Time exitTime);//joseph
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
-        void inspectParkingLot(Time inspectionTime);
+        void inspectParkingLot(Time inspectionTime);//joseph
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
 
     private:
+        Block<MtmParkingLot::Motorbike> bike_block;
+        Block<MtmParkingLot::Handicapped> handicapped_block;
+        Block<MtmParkingLot::Car> car_block;
     };
 
 }

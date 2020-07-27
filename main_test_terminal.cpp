@@ -118,10 +118,12 @@ bool test_1()
     return true;
 }
 
+#define TRU true
 bool test_2()
 {
-    return false;
+    return TRU;
 }
+#undef TRU
 /* #endregion */
 
 /* #region call and run tests  */

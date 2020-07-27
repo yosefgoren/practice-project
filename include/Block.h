@@ -27,15 +27,17 @@ namespace MtmParkingLot
     {
     public:
         Block(std::size_t max_size) : max_size(max_size) {}
-        ParkingResult park(const Vehicle& vehicle, int spot); //const vehicle?
+        ParkingResult park(const Vehicle& vehicle, int spot = AVAILABLE_SPOT); 
         ParkingResult exit(const Vehicle& vehicle);
 
         const Vehicle& operator[](int spot) const;
         Vehicle& operator[](int spot);
 
     private:
+        static const int AVAILABLE_SPOT = -1;
         void insert(const Vehicle& vehicle, int spot);
         void erase(const Vehicle& vehicle);
+        int getEmptySpot();
         std::size_t size = 0;
         std::size_t max_size;
         std::map<int, Vehicle> spots;
@@ -74,10 +76,27 @@ namespace MtmParkingLot
             return VEHICLE_ALREADY_PARKED;
         }
 
+        if(spot == AVAILABLE_SPOT)
+        {
+            try
+            {
+                spot = getEmptySpot();
+            }
+            catch(std::logic_error& e)
+            {
+                return NO_EMPTY_SPOT;
+            }
+        }
+        else if (spot < AVAILABLE_SPOT || spot >= int(max_size))
+        {
+            throw std::logic_error("No such spot...");
+        }
+
         if(spots.find(spot) != spots.end())
         {
             return SPOT_TAKEN;
         }
+        
 
         insert(vehicle, spot);
         return SUCCESS;
@@ -93,6 +112,25 @@ namespace MtmParkingLot
 
         erase(vehicle);
         return SUCCESS;
+    }
+
+    template <class Vehicle>
+    int Block<Vehicle>::getEmptySpot()
+    {
+        for (int i = 0; i < int(max_size); ++i)
+        {
+            try
+            {
+                operator[](i);
+            }
+            catch(const std::logic_error& e)
+            {
+                return i;
+            }
+            
+        }
+        throw std::logic_error("No empty spot");
+        return 0;
     }
 
     template <class Vehicle>
