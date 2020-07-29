@@ -30,7 +30,7 @@ namespace MtmParkingLot
     {
     public:
         Block(std::size_t max_size) : max_size(max_size) {}
-        ParkingLotUtils::ParkingResult park(const Vehicle& vehicle, ParkingLotUtils::VehicleType vehicle_type); 
+        ParkingLotUtils::ParkingResult park(const Vehicle& vehicle); 
         ParkingLotUtils::ParkingResult exit(const Vehicle& vehicle);
         int getSpot(const Vehicle& vehicle) const; //ParkingLotUtils::LicensePlate& plate) const;//new added by joseph
         bool contains(const Vehicle& vehicle) const;//ParkingLotUtils::LicensePlate& plate) const;//new added by joseph
@@ -112,7 +112,7 @@ namespace MtmParkingLot
     }
 
     template <class Vehicle>
-    ParkingLotUtils::ParkingResult Block<Vehicle>::park(const Vehicle& vehicle, ParkingLotUtils::VehicleType vehicle_type)
+    ParkingLotUtils::ParkingResult Block<Vehicle>::park(const Vehicle& vehicle)
     {
         if(size == max_size)
         {
@@ -120,32 +120,28 @@ namespace MtmParkingLot
             return ParkingLotUtils::NO_EMPTY_SPOT;
         }
         int spot = getEmptySpot();
-        ParkingLotUtils::ParkingSpot parking_spot(vehicle_type, spot);
 
         if(vehicles.find(vehicle) != vehicles.end())
         {
-            std::streambuf *buf = ParkingLotUtils::ParkingLotPrinter::printEntryFailureAlreadyParked(std::cout, parking_spot).rdbuf();
-            std::cout << buf << std::endl;
             return ParkingLotUtils::VEHICLE_ALREADY_PARKED;
         }
         
         insert(vehicle, spot);
-        std::streambuf *buf = ParkingLotUtils::ParkingLotPrinter::printEntrySuccess(std::cout, parking_spot).rdbuf();
-        std::cout << buf << std::endl;
         return ParkingLotUtils::SUCCESS;
     }
 
     template <class Vehicle>
     ParkingLotUtils::ParkingResult Block<Vehicle>::exit(const Vehicle& vehicle)
     {
-        if(vehicles.find(vehicle) == vehicles.end())
+        try
         {
-            std::cout << ParkingLotUtils::ParkingLotPrinter::printExitFailure(std::cout).rdbuf() << std::endl;
-            return ParkingLotUtils::VEHICLE_NOT_FOUND;
+            erase(vehicle);
         }
-
-        erase(vehicle);
-        std::cout << ParkingLotUtils::ParkingLotPrinter::printExitSuccess(std::cout).rdbuf() << std::endl;
+        catch (...)
+        {
+            throw;
+        }
+        
         return ParkingLotUtils::SUCCESS;
     }
 
