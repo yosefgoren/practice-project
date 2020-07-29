@@ -1,4 +1,5 @@
 #include "../include/ParkingLot.h"
+#include "../include/ParkingLotPrinter.h"
 
 using namespace MtmParkingLot;
 using namespace ParkingLotUtils;
@@ -28,9 +29,24 @@ MtmParkingLot::ParkingResult ParkingLot::enterParking(ParkingLotUtils::VehicleTy
     return SUCCESS;
 }
 
-MtmParkingLot::ParkingResult exitParking(LicensePlate licensePlate, Time exitTime)
+MtmParkingLot::ParkingResult ParkingLot::exitParking(LicensePlate plate, Time exitTime)
 {
-    
+    if(bike_block.contains(plate))
+    {
+        bike_block.exit(bike_block[bike_block.getSpot(plate)]);
+        return SUCCESS;
+    }
+    if(handicapped_block.contains(plate))
+    {
+        handicapped_block.exit(handicapped_block[handicapped_block.getSpot(plate)]);
+        return SUCCESS;
+    }
+    if(car_block.contains(plate))
+    {
+        car_block.exit(car_block[car_block.getSpot(plate)]);
+        return SUCCESS;
+    }
+
+    ParkingLotUtils::ParkingLotPrinter::printExitFailure(std::cout, plate);
+    return VEHICLE_NOT_FOUND;
 }
-
-

@@ -6,6 +6,7 @@
 #include <memory>
 #include <exception>
 #include <utility>
+#include "ParkingLotTypes.h"
 
 
 //typedef std::string Vehicle;
@@ -29,6 +30,9 @@ namespace MtmParkingLot
         Block(std::size_t max_size) : max_size(max_size) {}
         ParkingResult park(const Vehicle& vehicle, int spot = AVAILABLE_SPOT); 
         ParkingResult exit(const Vehicle& vehicle);
+        int getSpot(const ParkingLotUtils::LicensePlate& plate) const;//new added by joseph
+        bool contains(const ParkingLotUtils::LicensePlate& plate) const;//new added by joseph
+
 
         const Vehicle& operator[](int spot) const;
         Vehicle& operator[](int spot);
@@ -44,6 +48,22 @@ namespace MtmParkingLot
         std::map<Vehicle, int> vehicles;
 
     };
+
+    template <class Vehicle>
+    int Block<Vehicle>::getSpot(const ParkingLotUtils::LicensePlate& plate) const//new added by joseph
+    {
+        for(int i = 0; i < this->size(); ++i)
+            if(plate == this->[i])
+                return i;
+        return VEHICLE_NOT_FOUND;
+    }
+
+    template <class Vehicle>
+    bool Block<Vehicle>::contains(const ParkingLotUtils::LicensePlate& plate) const
+    {
+        return getSpot(plate) != VEHICLE_NOT_FOUND;
+    } 
+
 
     template <class Vehicle>
     void Block<Vehicle>::insert(const Vehicle& vehicle, int spot)
