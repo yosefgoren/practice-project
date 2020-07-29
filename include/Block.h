@@ -7,6 +7,8 @@
 #include <exception>
 #include <utility>
 #include "ParkingLotTypes.h"
+#include "ParkingLotPrinter.h"
+#include "ParkingSpot.h"
 
 
 //typedef std::string Vehicle;
@@ -14,31 +16,31 @@
 
 namespace MtmParkingLot
 {
-    enum ParkingResult 
-    {
-        SUCCESS,
-        NO_EMPTY_SPOT,
-        VEHICLE_NOT_FOUND,
-        VEHICLE_ALREADY_PARKED,
-        SPOT_TAKEN
-    };
+    // enum ParkingResult 
+    // {
+    //     SUCCESS,
+    //     NO_EMPTY_SPOT,
+    //     VEHICLE_NOT_FOUND,
+    //     VEHICLE_ALREADY_PARKED,
+    //     SPOT_TAKEN
+    // };
     
     template <class Vehicle>
     class Block : public std::map<int, const Vehicle>
     {
     public:
         Block(std::size_t max_size) : max_size(max_size) {}
-        ParkingResult park(const Vehicle& vehicle, int spot = AVAILABLE_SPOT); 
-        ParkingResult exit(const Vehicle& vehicle);
-        int getSpot(const ParkingLotUtils::LicensePlate& plate) const;//new added by joseph
-        bool contains(const ParkingLotUtils::LicensePlate& plate) const;//new added by joseph
+        ParkingLotUtils::ParkingResult park(const Vehicle& vehicle, ParkingLotUtils::VehicleType vehicle_type); 
+        ParkingLotUtils::ParkingResult exit(const Vehicle& vehicle);
+        int getSpot(const Vehicle& vehicle) const; //ParkingLotUtils::LicensePlate& plate) const;//new added by joseph
+        bool contains(const Vehicle& vehicle) const;//ParkingLotUtils::LicensePlate& plate) const;//new added by joseph
 
 
         const Vehicle& operator[](int spot) const;
         Vehicle& operator[](int spot);
 
     private:
-        static const int AVAILABLE_SPOT = -1;
+        //static const int AVAILABLE_SPOT = -1;
         void insert(const Vehicle& vehicle, int spot);
         void erase(const Vehicle& vehicle);
         int getEmptySpot();
@@ -50,18 +52,44 @@ namespace MtmParkingLot
     };
 
     template <class Vehicle>
-    int Block<Vehicle>::getSpot(const ParkingLotUtils::LicensePlate& plate) const//new added by joseph
+    static bool equiv(Vehicle vehicle, Vehicle other_vehicle)
     {
-        for(int i = 0; i < this->size(); ++i)
-            if(plate == this->[i])
-                return i;
-        return VEHICLE_NOT_FOUND;
+        return !(vehicle < other_vehicle) && !(other_vehicle < vehicle);
     }
 
     template <class Vehicle>
-    bool Block<Vehicle>::contains(const ParkingLotUtils::LicensePlate& plate) const
+    int Block<Vehicle>::getSpot(const Vehicle& vehicle) const //ParkingLotUtils::LicensePlate& plate) const//new added by joseph
     {
-        return getSpot(plate) != VEHICLE_NOT_FOUND;
+        for(int i = 0; i < (int)max_size; ++i)
+        {
+            try
+            {
+                if(equiv(vehicle, operator[](i)))
+                    return i;
+            }
+            catch (std::logic_error& e)
+            {
+                //this code is dumvb
+            }
+        }
+
+        throw std::logic_error("No such vehilce...");
+        return -1;
+        //return VEHICLE_NOT_FOUND; this just returns 2
+    }
+
+    template <class Vehicle>
+    bool Block<Vehicle>::contains(const Vehicle& vehicle) const //ParkingLotUtils::LicensePlate& plate) const
+    {
+        try
+        {
+            getSpot(vehicle);
+        }
+        catch (std::logic_error& e)
+        {
+            return false;
+        }
+        return true; //getSpot(plate) != VEHICLE_NOT_FOUND;
     } 
 
 
@@ -84,54 +112,41 @@ namespace MtmParkingLot
     }
 
     template <class Vehicle>
-    ParkingResult Block<Vehicle>::park(const Vehicle& vehicle, int spot)
+    ParkingLotUtils::ParkingResult Block<Vehicle>::park(const Vehicle& vehicle, ParkingLotUtils::VehicleType vehicle_type)
     {
         if(size == max_size)
         {
-            return NO_EMPTY_SPOT;
+            std::cout << ParkingLotUtils::ParkingLotPrinter::printEntryFailureNoSpot(std::cout).rdbuf() << std::endl;
+            return ParkingLotUtils::NO_EMPTY_SPOT;
         }
+        int spot = getEmptySpot();
+        ParkingLotUtils::ParkingSpot parking_spot(vehicle_type, spot);
 
         if(vehicles.find(vehicle) != vehicles.end())
         {
-            return VEHICLE_ALREADY_PARKED;
-        }
-
-        if(spot == AVAILABLE_SPOT)
-        {
-            try
-            {
-                spot = getEmptySpot();
-            }
-            catch(std::logic_error& e)
-            {
-                return NO_EMPTY_SPOT;
-            }
-        }
-        else if (spot < AVAILABLE_SPOT || spot >= int(max_size))
-        {
-            throw std::logic_error("No such spot...");
-        }
-
-        if(spots.find(spot) != spots.end())
-        {
-            return SPOT_TAKEN;
+            std::streambuf *buf = ParkingLotUtils::ParkingLotPrinter::printEntryFailureAlreadyParked(std::cout, parking_spot).rdbuf();
+            std::cout << buf << std::endl;
+            return ParkingLotUtils::VEHICLE_ALREADY_PARKED;
         }
         
-
         insert(vehicle, spot);
-        return SUCCESS;
+        std::streambuf *buf = ParkingLotUtils::ParkingLotPrinter::printEntrySuccess(std::cout, parking_spot).rdbuf();
+        std::cout << buf << std::endl;
+        return ParkingLotUtils::SUCCESS;
     }
 
     template <class Vehicle>
-    ParkingResult Block<Vehicle>::exit(const Vehicle& vehicle)
+    ParkingLotUtils::ParkingResult Block<Vehicle>::exit(const Vehicle& vehicle)
     {
         if(vehicles.find(vehicle) == vehicles.end())
         {
-            return VEHICLE_NOT_FOUND;
+            std::cout << ParkingLotUtils::ParkingLotPrinter::printExitFailure(std::cout).rdbuf() << std::endl;
+            return ParkingLotUtils::VEHICLE_NOT_FOUND;
         }
 
         erase(vehicle);
-        return SUCCESS;
+        std::cout << ParkingLotUtils::ParkingLotPrinter::printExitSuccess(std::cout).rdbuf() << std::endl;
+        return ParkingLotUtils::SUCCESS;
     }
 
     template <class Vehicle>

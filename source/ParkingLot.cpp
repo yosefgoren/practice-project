@@ -31,19 +31,19 @@ MtmParkingLot::ParkingResult ParkingLot::enterParking(ParkingLotUtils::VehicleTy
 
 MtmParkingLot::ParkingResult ParkingLot::exitParking(LicensePlate plate, Time exitTime)
 {
-    if(bike_block.contains(plate))
+    if(bike_block.contains(Motorbike(Time(0,0,0),plate)))
     {
-        bike_block.exit(bike_block[bike_block.getSpot(plate)]);
+        bike_block.exit(bike_block[bike_block.getSpot(Motorbike(Time(0,0,0),plate))]);
         return SUCCESS;
     }
-    if(handicapped_block.contains(plate))
+    if(handicapped_block.contains(Handicapped(Time(0,0,0),plate)))
     {
-        handicapped_block.exit(handicapped_block[handicapped_block.getSpot(plate)]);
+        handicapped_block.exit(handicapped_block[handicapped_block.getSpot(Handicapped(Time(0,0,0),plate))]);
         return SUCCESS;
     }
-    if(car_block.contains(plate))
+    if(car_block.contains(Car(Time(0,0,0),plate)))
     {
-        car_block.exit(car_block[car_block.getSpot(plate)]);
+        car_block.exit(car_block[car_block.getSpot(Car(Time(0,0,0),plate))]);
         return SUCCESS;
     }
 
